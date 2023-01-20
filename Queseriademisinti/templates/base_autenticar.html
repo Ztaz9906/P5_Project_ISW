@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QueSeriaDeMiSinTi | {% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href={% static 'css/bootstrap.min.css' %} />
+    <link rel="stylesheet" href={% static 'css/my_styles.css' %} />
+  </head>
+  <body
+    class="d-flex p-2 flex-column min-vh-100 justify-content-center align-content-center align-items-lg-center">
+    <div class="container h-100">
+        <div class="row justify-content-sm-center h-100">
+            <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+                <div class="text-center my-5">
+                    <img src={% static 'images/icons/icons8-kawaii-egg-100.png' %} alt="logo" width="100">
+                </div>
+                {% block content %} {% endblock content %}
+                <div class="text-center mt-5 text-muted">
+                 Copyright &copy; 2022 &mdash; QueSeriaDeMiSinTi
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src={% static 'js/bootstrap.min.js' %}></script>
+    <script src={% static 'js/bootstrap.bundle.min.js' %}></script>
+    <script src={% static 'js/sweetalert2@11.js'%}></script>
+    {% comment %} <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("formulario").addEventListener('submit', validarFormulario, ); 
+      });
+      function validarFormulario(evento) {
+          Swal.fire({'title' : "¡Hecho!" , "text" : "Usuario Creado", "icon": "success"})   
+      }
+    </script> {% endcomment %}
+   {% block scripts %}{% endblock scripts %}
+  </body>
+</html>

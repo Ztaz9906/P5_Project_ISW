@@ -1,0 +1,131 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+
+{% block title %}Quejas y Sugerencias{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {#Container principal#}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5 scrollarea">
+            <div class="container mt-3 ">
+                <h1 class="fs-5">Quejas y Sugerencias</h1>
+            </div>
+
+            <!--------------------------------------------------------------------------------------
+                -----------------TABLA CON RESULTADOS DE TRABAJADORES------------------------------------
+                -------------------------------------------------------------------------------------------->
+
+            {% comment %} ----------------------------------------------------------------------------
+            -------------------------------BOTON INSERTAR------------------------------------
+            ---------------------------------------------------------------------------{% endcomment %}
+            {% if perms.bugfinder.add_quejas %}
+                <div class="p-1">
+                    <!-- Botón INSERTAR-->
+                    <a type="button" href="{% url 'add_queja'%}"
+                       class="btn p-0 border me-2  "
+                       style="background-color: white"
+                       title="Insertar Trabajador">
+                        <button class="btn rounded-0">
+                            <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                 alt="Insertar Trabajador" width="16" height="16">
+                            Añadir Quejas o Sugerencia
+                        </button>
+                    </a>
+                </div>
+            {% endif %}
+            <!--------------------------------------------------------------------------------------
+           -----------------FIN BOTON INSERTAR------------------------------------
+           -------------------------------------------------------------------------------------------->
+
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="entidadTable" class="table table-hover table-sm ">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 10%">fecha_creacion</th>
+                                <th scope="col" class="text-center" style="width: 10%">tipo</th>
+                                <th scope="col" class="text-center" style="width: 10%">Nombre</th>
+                                <th scope="col" class="text-center" style="width: 10%">Titulo</th>
+                                <th scope="col" class="text-center" style="width: 10%">Descripción</th>
+                                {% comment %} {% if perms.Queseriademisinti.change_quejas or perms.Queseriademisinti.delete_quejas %}
+                                    <th scope="col" class="text-center" style="width: 10%">Opciones</th>
+                                {% endif %} {% endcomment %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% csrf_token %}
+                            {% for quejas in object_list %}
+                                <tr>
+                                    <td class="text-center">{{ quejas.fecha_creacion}}</td>
+                                    {%if quejas.tipo == 'Q'%}
+                                    <td class="text-center">Queja</td>
+                                    {%else%}
+                                    <td class="text-center">Sugerencia</td>
+                                    {%endif%}
+                                    <td class="text-center">{{ quejas.usuario_id.username }}</td>
+                                    <td class="text-center">{{ quejas.titulo}}</td>
+                                    <td class="text-center">{{ quejas.descripcion}}</td>
+                                    {% comment %} {% if perms.Queseriademisinti.change_quejas or perms.Queseriademisinti.delete_quejas %}
+                                        <td>
+                                            {% if perms.bugfinder.change_quejas %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none" title="Añadir Comentario"
+                                                   href="">
+                                                   <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                                   alt="Añadir Respuesta" width="16" height="16">
+                                                </a>
+                                            {% endif %}
+                                            {% if perms.bugfinder.change_quejas %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none" title="Editar"
+                                                   href="">
+                                                    <img class=""
+                                                         src="{% static 'images/icons/pen.svg' %}"
+                                                         alt="Modificar" width="14" height="14">
+                                                </a>
+                                            {% endif %}
+                                            {% if perms.bugfinder.delete_quejas %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none"
+                                                   title="Eliminar"
+                                                   href="">
+                                                   <img class=""
+                                                         src="{% static 'images/icons/trash.svg' %}"
+                                                         alt="Eliminar" width="14" height="14">
+                                                  
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %} {% endcomment %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!--------------------------------------------------------------------------------------
+       -----------------TABLA CON RESULTADOS DE LAS ENTIDADES------------------------------------
+       -------------------------------------------------------------------------------------------->
+    </main>
+{% endblock content %}
+
+{% block scripts %}
+{% if messages %}
+    {% for msg in messages %}
+        <script>
+            Swal.fire({'title' : "¡Hecho!" , "text" : "{{msg}}", "icon": "success"})
+        </script>
+    {% endfor %}
+{% endif %}
+    <script type="application/javascript">
+        $(function () {
+            $('#entidadTable').DataTable({
+                responsive: true,
+                "language": {
+                    url: '{% static 'DataTables/es-ES.json ' %}'
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}

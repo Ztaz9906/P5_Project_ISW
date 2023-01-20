@@ -1,0 +1,94 @@
+{% extends "base_principal.html" %}
+{% load static %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 text-center card-title fw-bold mb-4">{{title}}</h1>
+        <form id="formulario" method="POST" autocomplete="off">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger sm mb-3 p-2" role="alert">
+                    <h6>Ha ocurrido un error al intentar guardar el trabajador</h6>
+                </div>
+            {% endif %}
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="nomb">Nombre y Apellidos</label>
+                {{form.username}}
+                {%if form.username.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                    {% for error in form.username.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+            </div>
+
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="nomb">Carnet Identidad</label>
+                {{form.ci}}
+                {%if form.ci.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                {% for error in form.ci.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+            </div>
+
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="pass">Teléfono</label>
+                {{form.tfno}}
+                {%if form.tfno.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                {% for error in form.tfno.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+                
+            </div>
+
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="pass">Dirección</label>
+                {{form.dir}} 
+            </div>
+            
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="corr">Correo electrónico</label>
+                {{form.email}}
+                {%if form.email.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                {% for error in form.email.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+            </div>
+
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="pass">Contraseña</label>
+                {{form.password1}}
+                {%if form.password1.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                {% for error in form.password1.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+            </div>
+            <div class="mb-3">
+                <label class="mb-2 text-muted" for="pass">Confirmar Contraseña</label>
+                {{form.password2}}
+                {%if form.password2.errors%}
+                <div class="alert alert-danger sm m-1 p-2 small" role="alert">
+                {% for error in form.password2.errors %}{{ error }}{% endfor %}
+                </div>
+                {%endif%}
+            </div>
+            
+            <div class="d-flex flex-row justify-content-center">
+                <button type="submit" class="btn btn-primary">
+                    Añadir
+                </button>
+                <a class="btn btn-danger ms-auto" href="{% url 'trabajador' %}">Cancelar</a>
+            </div>
+            
+        </form>
+    </div>
+</div>
+{% endblock content %}

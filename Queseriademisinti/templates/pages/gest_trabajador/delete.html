@@ -1,0 +1,28 @@
+{% extends "base_principal.html" %}
+{% load static %}
+
+{% block title %}
+    Eliminar Trabajador
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 text-center card-title fw-bold mb-4">Eliminar Trabajador</h1>
+        <div class="content">
+            <p class="fs-6">¿Está usted seguro que quiere eliminar al trabajador seleccionada?</p>
+            <ul><h2 class="fs-5">Trabajador:</h2>
+                <li>
+                    <strong>{{ object.username }}</strong>
+                </li>
+            </ul>
+        <form method="POST" autocomplete="off" id="formulario">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="Si, estoy seguro">
+                <a class="text-decoration-none" href="{% url 'trabajador' %}">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                </a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

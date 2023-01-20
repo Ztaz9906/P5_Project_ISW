@@ -1,0 +1,60 @@
+{% extends "base_principal.html" %}
+{% load static %}
+
+{% block title %}
+    Añadir Pedido
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 text-center card-title fw-bold mb-4">Añadir Pedido</h1>
+        <form id="formulario" method = "POST" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            <div class="row">
+                <div class=" mb-4 position-relative">
+                <h6>Cantidad Disponible: {{object.cantidad}}</h6>
+                    <label class="form-label">Cantidad a comprar</label>
+                       {{forms.cantidad}}
+                </div>
+            
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button id="enviar" type="submit" class="btn btn-primary">
+                    Añadir Pedido
+                </button>
+                <a class="btn btn-danger ms-auto" href="{% url 'cliente' %}">Cancelar</a>
+            </div>
+        </form> 
+    </div>
+</div>
+{% endblock content %}
+{%block scripts%} 
+{% if messages %}
+{% for msg in messages %}
+  <script>
+    Swal.fire({'title' : "¡Error!" , "text" : "{{msg}}", "icon": "warning"})
+  </script>
+{% endfor %}
+{% endif %}
+
+{% comment %} <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("formulario").addEventListener('submit', validarFormulario, ); 
+    });
+    function validarFormulario(evento) {
+    evento.preventDefault();
+    var cant = document.getElementById('id_cantidad').value;
+    if(cant < 0) {
+        alert('La cantidad no puede ser negativa');
+        return;
+    }
+    if else()
+    else
+        alert('Pedido Añadido');
+        return this.submit();
+    
+    
+    }
+</script> {% endcomment %}
+{%endblock scripts%}

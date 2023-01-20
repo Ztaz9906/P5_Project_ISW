@@ -1,0 +1,92 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+
+{% block title %}Gestionar Trabajador{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {#Container principal#}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5 scrollarea">
+            <div class="container mt-3 ">
+                <h1 class="fs-5">Gestionar Quejas y Sugerencias</h1>
+            </div>
+            
+            <!--------------------------------------------------------------------------------------
+                -----------------TABLA CON RESULTADOS DE TRABAJADORES------------------------------------
+                -------------------------------------------------------------------------------------------->
+
+           
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="entidadTable" class="table table-hover table-sm ">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 10%">Fecha</th>
+                                <th scope="col" class="text-center" style="width: 10%">tipo</th>
+                                <th scope="col" class="text-center" style="width: 10%">Nombre</th>
+                                <th scope="col" class="text-center" style="width: 10%">Titulo</th>
+                                {% if perms.Queseriademisinti.change_quejas or perms.Queseriademisinti.delete_quejas %}
+                                    <th scope="col" class="text-center" style="width: 10%">Opciones</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% csrf_token %}
+                            {% for quejas in object_list %}
+                                <tr>
+                                    <td class="text-center">{{ quejas.fecha_creacion}}</td>
+                                    {%if quejas.tipo == 'Q'%}
+                                    <td class="text-center">Queja</td>
+                                    {%else%}
+                                    <td class="text-center">Sugerencia</td>
+                                    {%endif%}
+                                    <td class="text-center">{{ quejas.usuario_id.username }}</td>
+                                    <td class="text-center">{{ quejas.titulo}} </td>
+                                    {% if perms.Queseriademisinti.change_quejas or perms.Queseriademisinti.delete_quejas %}
+                                        <td>
+                                            {% if perms.bugfinder.change_quejas %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none" title="Añadir Respuesta"
+                                                   href="{% url 'add_repuesta' quejas.id %}">
+                                                   <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                                   alt="Añadir Respuesta" width="16" height="16">
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <!-- Modal -->
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!--------------------------------------------------------------------------------------
+       -----------------TABLA CON RESULTADOS DE LAS ENTIDADES------------------------------------
+       -------------------------------------------------------------------------------------------->
+    </main>
+
+{% endblock content %}
+
+{% block scripts %}
+{% if messages %}
+    {% for msg in messages %}
+        <script>
+            Swal.fire({'title' : "¡Hecho!" , "text" : "{{msg}}", "icon": "success"})
+        </script>
+    {% endfor %}
+{% endif %}
+    <script type="application/javascript">
+        $(function () {
+            $('#entidadTable').DataTable({
+                responsive: true,
+                "language": {
+                    url: '{% static 'DataTables/es-ES.json ' %}'
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}

@@ -1,0 +1,79 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+{% load grupos_tag %}
+
+{% block title %}Historial{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {#Container principal#}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5 scrollarea">
+            <div class="container mt-3 ">
+                {%if request.user|has_group:"cliente" %}
+                <h1 class="fs-5">Compras</h1>
+                {%else%}
+                <h1 class="fs-5">Ventas</h1>
+                {%endif%}
+                
+            </div>
+
+            <!--------------------------------------------------------------------------------------
+                -----------------TABLA CON RESULTADOS DE TRABAJADORES------------------------------------
+                -------------------------------------------------------------------------------------------->
+
+            {% comment %} ----------------------------------------------------------------------------
+            -------------------------------BOTON INSERTAR------------------------------------
+            ---------------------------------------------------------------------------{% endcomment %}
+            
+            <!--------------------------------------------------------------------------------------
+           -----------------FIN BOTON INSERTAR------------------------------------
+           -------------------------------------------------------------------------------------------->
+
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="entidadTable" class="table table-hover table-sm ">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 50%">Usuario</th>
+                                <th scope="col" class="text-center" style="width: 15%">Producto</th>
+                                <th scope="col" class="text-center" style="width: 25%">Fecha</th>
+                                <th scope="col" class="text-center" style="width: 25%">Cantidad</th>
+                                <th scope="col" class="text-center" style="width: 25%">Precio</th>
+                                <th scope="col" class="text-center" style="width: 25%">Total Pagado</th>          
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% csrf_token %}
+                            {% for pedido in list %}
+                                <tr>
+                                    <td class="text-center">{{ pedido.pedido_id.user_id.username}}</td>
+                                    <td class="text-center">{{ pedido.pedido_id.producto_id}}</td>
+                                    <td class="text-center">{{ pedido.fecha_creacion}}</td>
+                                    <td class="text-center">{{ pedido.pedido_id.cantidad}}</td>
+                                    <td class="text-center">{{ pedido.pedido_id.producto_id.precio }}</td>
+                                    <td class="text-center">{{ pedido.total_pagado}}$</td>                                
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!--------------------------------------------------------------------------------------
+       -----------------TABLA CON RESULTADOS DE LAS ENTIDADES------------------------------------
+       -------------------------------------------------------------------------------------------->
+    </main>
+{% endblock content %}
+
+{% block scripts %}
+    <script type="application/javascript">
+        $(function () {
+            $('#entidadTable').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+{% endblock scripts %}

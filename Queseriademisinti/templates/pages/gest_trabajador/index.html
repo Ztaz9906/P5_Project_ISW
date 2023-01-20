@@ -1,0 +1,141 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+{% load grupos_tag %}
+{% block title %}Gestionar Trabajador{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {#Container principal#}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5 scrollarea">
+            <div class="container mt-3 ">
+                <h1 class="fs-5">Gestionar Trabajador</h1>
+            </div>
+
+            <!--------------------------------------------------------------------------------------
+                -----------------TABLA CON RESULTADOS DE TRABAJADORES------------------------------------
+                -------------------------------------------------------------------------------------------->
+
+            {% comment %} ----------------------------------------------------------------------------
+            -------------------------------BOTON INSERTAR------------------------------------
+            ---------------------------------------------------------------------------{% endcomment %}
+            {% if perms.bugfinder.add_user %}
+                <div class="p-1">
+                    <!-- Botón INSERTAR-->
+                    <a type="button" href="{% url 'add_admin' %}"
+                       class="btn p-0 border me-2  "
+                       style="background-color: white"
+                       title="Insertar Administrador">
+                        <button class="btn rounded-0">
+                            <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                 alt="Insertar Trabajador" width="16" height="16">
+                            Añadir Administrador
+                        </button>
+                    </a>
+                    <a type="button" href="{% url 'add_dependiente' %}"
+                       class="btn p-0 border me-2  "
+                       style="background-color: white"
+                       title="Insertar Dependiente">
+                        <button class="btn rounded-0">
+                            <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                 alt="Insertar Dependiente" width="16" height="16">
+                            Añadir Dependiente
+                        </button>
+                    </a>
+                    <a type="button" href="{% url 'add_repartidor' %}"
+                       class="btn p-0 border me-2  "
+                       style="background-color: white"
+                       title="Insertar Repartidor">
+                        <button class="btn rounded-0">
+                            <img class="" src="{% static 'images/icons/plus-circle.svg' %}"
+                                 alt="Insertar Repartidor" width="16" height="16">
+                            Añadir Repartidor
+                        </button>
+                    </a>
+                </div>
+            {% endif %}
+            <!--------------------------------------------------------------------------------------
+           -----------------FIN BOTON INSERTAR------------------------------------
+           -------------------------------------------------------------------------------------------->
+
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="entidadTable" class="table table-hover table-sm ">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 10%">Nombre</th>
+                                <th scope="col" class="text-center" style="width: 10%">Teléfono</th>
+                                <th scope="col" class="text-center" style="width: 10%">Correo</th>
+                                <th scope="col" class="text-center" style="width: 10%">Dirección</th>
+                                <th scope="col" class="text-center" style="width: 10%">Carnet Identidad</th>  
+                                {% if perms.Queseriademisinti.change_user or perms.Queseriademisinti.delete_user %}
+                                    <th scope="col" class="text-center" style="width: 10%">Opciones</th>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% csrf_token %}
+                            {% for user in object_list %}
+                                <tr>
+                                {% comment %} {% if user|has_group:"repartidor" or  user|has_group:"admin" or user|has_group:"dependiente"%} {% endcomment %}
+                                    <td class="text-center">{{ user.username| escape }}</td>
+                                    <td class="text-center">{{ user.tfno | escape }}</td>
+                                    <td class="text-center">{{ user.email | escape }}</td>
+                                    <td class="text-center">{{ user.dir | escape }}</td>
+                                    <td class="text-center">{{ user.ci | escape }}</td>
+                                    {% if perms.Queseriademisinti.change_user or perms.Queseriademisinti.delete_user %}
+                                        <td>
+                                            {% if perms.bugfinder.change_user %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none" title="Editar"
+                                                   href="{% url 'editar_trabajador' user.id %}">
+                                                    <img class=""
+                                                         src="{% static 'images/icons/pen.svg' %}"
+                                                         alt="Modificar" width="14" height="14">
+                                                </a>
+                                            {% endif %}
+                                            {% if perms.bugfinder.delete_user %}
+                                                <a id="" class=" mx-1 px-1 text-decoration-none"
+                                                   title="Eliminar"
+                                                   href="{% url 'eliminar_trabajador' user.id %}">
+                                                   <img class=""
+                                                         src="{% static 'images/icons/trash.svg' %}"
+                                                         alt="Eliminar" width="14" height="14">
+                                                  
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                {% comment %} {%endif%} {% endcomment %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!--------------------------------------------------------------------------------------
+       -----------------TABLA CON RESULTADOS DE LAS ENTIDADES------------------------------------
+       -------------------------------------------------------------------------------------------->
+    </main>
+{% endblock content %}
+{% block scripts %}
+{% if messages %}
+    {% for msg in messages %}
+        <script>
+            Swal.fire({'title' : "¡Hecho!" , "text" : "{{msg}}", "icon": "success"})
+        </script>
+    {% endfor %}
+{% endif %}
+    <script type="application/javascript">
+        $(function () {
+            $('#entidadTable').DataTable({
+                responsive: true,
+                "language": {
+                    url: '{% static 'DataTables/es-ES.json ' %}'
+                }
+            });
+        });
+    </script>
+{% endblock scripts %}

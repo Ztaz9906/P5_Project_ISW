@@ -1,0 +1,102 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+{% load grupos_tag %}
+{% block title %}Pedidos{% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {#Container principal#}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-5 scrollarea">
+            <div class="container mt-3 ">
+                <h1 class="fs-5">Pedidos</h1>
+            </div>
+
+            <!--------------------------------------------------------------------------------------
+                -----------------TABLA CON RESULTADOS DE TRABAJADORES------------------------------------
+                -------------------------------------------------------------------------------------------->
+
+            {% comment %} ----------------------------------------------------------------------------
+            -------------------------------BOTON INSERTAR------------------------------------
+            ---------------------------------------------------------------------------{% endcomment %}
+            
+            <!--------------------------------------------------------------------------------------
+           -----------------FIN BOTON INSERTAR------------------------------------
+           -------------------------------------------------------------------------------------------->
+
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="entidadTable" class="table table-hover table-sm ">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="text-center" style="width: 50%">Número</th>
+                                <th scope="col" class="text-center" style="width: 50%">Usuario</th>
+                                <th scope="col" class="text-center" style="width: 15%">Producto</th>
+                                <th scope="col" class="text-center" style="width: 25%">Estado</th>
+                                <th scope="col" class="text-center" style="width: 25%">Cantidad</th>
+                                {% if perms.Queseriademisinti.change_pedido or perms.Queseriademisinti.delete_pedido%}
+                                <th scope="col" class="text-center" style="width: 10%">Opciones</th>
+                            {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% csrf_token %}
+                            {% for pedido in object_list %}
+                                <tr>
+                                    <td class="text-center">{{ pedido.id}}</td>
+                                    <td class="text-center">{{ pedido.user_id.username}}</td>
+                                    <td class="text-center">{{ pedido.producto_id}}</td>
+                                    {%if pedido.estado == "E"%}
+                                        <td class="text-center">Espera</td>
+                                    {%endif%}
+                                    {%if pedido.estado == "A"%}
+                                        <td class="text-center">Aceptado</td>
+                                    {%endif%}
+                                    {%if pedido.estado == "En"%}
+                                        <td class="text-center">Entregado</td>
+                                    {%endif%}
+                                    <td class="text-center">{{ pedido.cantidad | escape }}</td>
+                                    {% if perms.Queseriademisinti.delete_pedido %}
+                                        <td>
+                                        {% if request.user|has_group:"cliente" %}
+                                            <a id="" class=" mx-1 px-1 text-decoration-none"
+                                               title="Eliminar"
+                                               href="{% url 'eliminar_pedido' pedido.id %}">
+                                               <img class=""
+                                                     src="{% static 'images/icons/trash.svg' %}"
+                                                     alt="Eliminar" width="14" height="14">
+                                            </a>
+                                        {% endif %}
+                                        </td>
+                                    {% endif %} 
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
+
+{% block scripts %}
+    <script type="application/javascript">
+        $(function () {
+            $('#entidadTable').DataTable({
+                responsive: true,
+                "language": {
+                    url: '{% static 'DataTables/es-ES.json ' %}'
+                }
+            });
+        });
+    </script>
+{% if messages %}
+    {% for msg in messages %}
+        <script>
+            Swal.fire({'title' : "¡Hecho!" , "text" : "{{msg}}", "icon": "success"})
+        </script>
+    {% endfor %}
+{% endif %}
+{% endblock scripts %}

@@ -1,0 +1,51 @@
+{% extends "base_principal.html" %}
+{% load static %}
+{%load grupos_tag %}
+{% block title %}
+    Eliminar Pedido
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 text-center card-title fw-bold mb-4">Eliminar Pedido</h1>
+        <div class="content">
+            <p class="fs-6">¿Está usted seguro que quiere eliminar el pedido seleccionado?</p>
+            <ul><h2 class="fs-5">Pedido:</h2>
+                <li>
+                    Usuario:<strong>{{ object.user_id.username }}</strong>  
+                </li>
+                <li>
+                    Producto:<strong>{{ object.producto_id }}</strong>
+                </li>
+                <li>
+                    {%if object.estado == "En"%}
+                    Estado:<strong>Entregado</strong>
+                    {%endif%}
+                    {%if object.estado == "A"%}
+                    Estado:<strong>Aceptado</strong>
+                    {%endif%}
+                    {%if object.estado == "E"%}
+                    Estado:<strong>Espera</strong>
+                    {%endif%}
+                </li>
+                      
+            </ul>
+        <form method="POST" autocomplete="off" id="formulario">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="Si, estoy seguro">
+            {%if request.user|has_group:"cliente"%}
+                <a class="text-decoration-none" href="{% url 'pedido_cliente' %}">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                </a>
+                {%else%}
+                <a class="text-decoration-none" href="{% url 'pedido' %}">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                </a>
+            {%endif%}
+        </form>
+    </div>
+</div>
+{% endblock content %}
+{%block scripts%} 
+{%endblock scripts%}

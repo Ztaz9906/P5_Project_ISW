@@ -1,0 +1,66 @@
+{% extends 'base_principal.html' %}
+{% load static %}
+{% block title %}Inicio{% endblock title %}
+{%block 'carrusel'%}
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src={% static 'images/carrusel-1.jpg' %} width="100%" height="650" alt="carrousel">
+      </div>
+      <div class="carousel-item">
+        <img src={% static 'images/carrusel-2.jpg' %} width="100%" height="650" alt="carrousel">
+      </div>
+      <div class="carousel-item">
+        <img src={% static 'images/carrusel-3.jpg' %} width="100%" height="650" alt="carrousel">
+      </div>
+    </div>
+  </div>
+{%endblock 'carrusel'%}
+{% block content %}
+<div class="album">
+    <div class="container">
+    {% comment %} {% if perms.Queseriademisinti.view_producto %} {% endcomment %}
+    {% if object_list %}
+    <div class="container my-3">
+        <h1 class="text-center" id="menu">Menu</h1>
+    </div>
+    {% endif %}    
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for producto in object_list %}
+               {%if producto.cantidad != 0%} 
+            <div class="col">
+                <div class="card shadow-lg rounded-5">
+                        <img class="rounded-5" src="{{producto.foto.url| escape }}" alt={{producto.nombre}} width="100%" height="200">
+                        <div class="card-body">
+                                <p class="card-text text-center h5 text-muted my-2 mb-3"><strong>{{producto.nombre}}</strong></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline" href="{% url 'add_pedido' producto.id %}"><img src={% static 'images/icons/shoppingcart_77968.png' %} alt="logo" width="25"></a>
+                                    </div>
+                                    <small class="text-muted"><strong>{{producto.cantidad}}</strong></small>
+                                    <small class="text-muted">{{producto.precio}}<strong>$</strong></small>
+                                </div>
+                        </div>
+                </div>   
+            </div>
+                {%endif%}
+            {% endfor %} 
+        </div>
+    {% comment %} {% endif %} {% endcomment %}
+    </div>
+</div>
+{% endblock content %}
+{%block scripts%}
+    {% if messages %}
+    {% for msg in messages %}
+    <script>
+        Swal.fire({'title' : "¡Hecho!" , "text" : "{{msg}}", "icon": "success"})
+    </script>
+    {% endfor %}
+    {% endif %}
+{%endblock scripts%}

@@ -1,0 +1,31 @@
+{% extends "base_principal.html" %}
+{% load static %}
+
+{% block title %}
+    Eliminar Respuesta
+{% endblock title %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-body p-5">
+        <h1 class="fs-4 text-center card-title fw-bold mb-4">Eliminar Respuesta a la Queja o Sugerencia</h1>
+        <div class="content">
+            <p class="fs-6">¿Está usted seguro que quiere eliminar la respuesta seleccionada?</p>
+            <ul><h2 class="fs-5">Respuesta:</h2>
+                <li>
+                Titulo:<strong>{{ object.quejas_id.titulo }}</strong>  
+                </li>
+                <li>
+                Descripcion:<strong>{{ object.descripcion }}</strong>
+                </li>
+            </ul>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            <input class="btn btn-danger" type="submit" value="Si, estoy seguro">
+                <a class="text-decoration-none" href="{% url 'respuesta' %}">
+                    <button type="button" class="btn btn-secondary">Cancelar</button>
+                </a>
+        </form>
+    </div>
+</div>
+{% endblock content %}

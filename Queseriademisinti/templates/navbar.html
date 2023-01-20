@@ -1,0 +1,85 @@
+{% load static %}
+{% load grupos_tag %}
+<div>
+    <nav class="d-flex flex-row justify-content-between aling-items-center bg-dark">
+        <div class="d-flex flex-row mx-2 justify-content-center align-items-center">
+            <span onclick="openNav()" class="mobile-nav-open-icon">&#9776</span>
+            <a class="navbar-brand"
+         href="{% url "principal" %}"><span class="display-6 text-light text-muted"><strong>QueSeriaDeMiSinTI</strong></span></a
+        >
+        </div>
+
+        
+        <div class="navbar-nav px-4">
+            <div class="nav-item text-nowrap d-flex flex-row">
+                    {% if user.is_authenticated %}
+                        <div class="p-1">
+                            <span class="me-2 text-uppercase text-muted"><strong>{{ request.user.username}}
+                            {%if request.user.is_cliente%}
+                                {%if request.user|has_group:"cliente"%}- Cliente{%endif%}
+                            {%else%}   
+                                {%if request.user|has_group:"dependiente"%}- Dependiente{%endif%} 
+                                {%if request.user|has_group:"admin" or request.user.is_superuser%}- Administrador{%endif%}
+                                {%if request.user|has_group:"repartidor"%}- Repartidor{%endif%} 
+                            {%endif%}
+                        </strong></span>
+                        </div>
+                        <a class="" href="{% url 'logout' %}" id="logout" title="Salir">
+                            <img src={% static  'images/icons/door-open.svg' %} alt="Desconectarse"
+                                class="rounded-circle" width="24" height="24">
+                        </a>
+                    {%else%}
+                    <a class="btn btn-outline-primary mx-2" href={% url 'login' %}>Iniciar Sesión</a>
+                    <a class="btn btn-outline-primary mx-1" href={% url 'register' %}>Registrarse</a>
+                    {% endif%}
+            </div>
+        </div>
+    </nav>
+
+    <!-- this would work as the backdrop when navbar is open-->
+    <div class="backdrop-container" id="backdrop"></div>
+
+    <!--the would be the drawer and it's content-->
+    <div id="mySidenav" class="sidenav-container bg-dark">
+
+        <span class="drawer-close-button">
+            <!--icon for closing of the navbar-->
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </span>
+        <!--Each links on the navbar-->
+        <ul>
+
+            <a href="#menu"><i class="fa fa-home"></i> Inicio</a>
+
+
+            <hr class="hr" />
+
+
+            <a href={% url 'cliente' %}>Menu</a>
+
+            <hr class="hr" />
+            {% if user.is_authenticated %}
+                {%if request.user.is_cliente%}
+                    {% if request.user|has_group:"cliente" %}
+                    <a href={% url 'cliente_historial' %}>Historial de Compras</a>
+                    <a href={% url 'quejas' %}>Quejas y sugerencias</a>
+                    <a href={% url 'user_respuesta' %}>Respuesta de quejas y sugerencias</a>
+                    <a href={% url 'pedido_cliente' %}>Lista de pedidos</a>
+                    {%endif%}
+                {%else%}
+                    {% if request.user|has_group:"admin" %}
+                        <a href={% url 'historial' %}>Historial de Ventas</a>
+                        <a href={% url 'admin_quejas' %}>Quejas y sugerencias</a>
+                        <a href={% url 'respuesta' %}>Respuesta de quejas y sugerencias</a>
+                        <a href={% url 'producto' %}>Gestionar menú</a>
+                        <a href={% url 'trabajador' %}>Gestionar trabajadores</a>
+                    {%else%}  
+                        <a href={% url 'pedido' %}>Lista de pedidos</a>
+                    {%endif%}
+                {%endif%}
+            {%endif%}
+            
+        </ul>
+
+    </div>
+</div>
